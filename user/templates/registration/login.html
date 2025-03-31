@@ -4,6 +4,13 @@
 <div class="d-flex justify-content-center align-items-center vh-100">
     <div class="w-50 p-4 border rounded shadow">
         <h2 class="text-center">Login</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
         <form method="POST" class="container mt-4">
             {% csrf_token %}
             

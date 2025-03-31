@@ -2,7 +2,18 @@
 
 {% block content %}
     <div class="container mt-5">
-        <h2 class="text-center">Patient Dashboard</h2>
+        <div class="d-flex justify-content-between">
+            <!-- Display User's Name and Logout Button -->
+            <h2 class="text-center">Patient Dashboard</h2>
+            <div>
+                {% if user.is_authenticated %}
+                    <span>Hello, {{ user.username }}!</span>
+                    <a href="{% url 'logout' %}" class="btn btn-danger ms-3">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+                {% endif %}
+            </div>
+        </div>
         
         <div class="d-flex justify-content-between mb-3">
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPatientModal">Add Patient</button>
@@ -13,9 +24,13 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Name</th>
-                    <th>Age</th>
-                    <th>Condition</th>
+                    <th>FirstName</th>
+                    <th>LastName</th>
+                    <th>Email</th>
+                    <th>DateOfBirth</th>
+                    <th>Doctor</th>
+                    <th>MedicalFile</th>
+                    <th>Image</th>
                     <th>Actions</th>
                 </tr>
             </thead>
