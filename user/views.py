@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from .forms import PatientForm, DoctorForm
+from .models import Patient, Doctor
 
 @login_required
 # Create your views here.
@@ -48,3 +50,49 @@ def login_view (request):
 def logout_view(request):
     logout(request)
     return redirect('login')  # Redirect to home page after logout
+
+def create_patient(request):
+    if request.method == 'POST':
+        form = PatientForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = PatientForm()
+    return render(request, "patient/create_patient.html", {'form': form})
+    # return render(request, 'create_patient.html', {'form': form})
+
+def patient_list(request):
+    patients = Patient.objects.all()
+    return render(request, 'home.html', {'patients': patients})
+
+def update_patient(request, pk):
+    patient = Patient.objects.get(id=pk)
+    if request.method == 'POST':
+        form = PatientForm(request.POST, request.FILES, instance=patient)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = PatientForm(instance=patient)
+    return render(request, 'patient/update_patient.html', {'form': form})
+
+def delete_patient(request, pk):
+    patient = Patient.objects.get(id=pk)
+    patient.delete()
+    return redirect('home')
+
+
+def doctor_list(request):
+    doctors = Doctor.objects.all()
+    return render(request, 'doctor/doctor.html', {'doctors': doctors})
+
+def create_doctor(request):
+    if request.method == 'POST':
+        form = DoctorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('doctor/doctor.html')
+    else:
+        form = DoctorForm()
+    return render(request, "doctor/create_doctor.html", {'form': form})

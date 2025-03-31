@@ -5,18 +5,11 @@
         <div class="d-flex justify-content-between">
             <!-- Display User's Name and Logout Button -->
             <h2 class="text-center">Patient Dashboard</h2>
-            <div>
-                {% if user.is_authenticated %}
-                    <span>Hello, {{ user.username }}!</span>
-                    <a href="{% url 'logout' %}" class="btn btn-danger ms-3">Logout</a>
-                {% else %}
-                    <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
-                {% endif %}
-            </div>
         </div>
         
         <div class="d-flex justify-content-between mb-3">
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPatientModal">Add Patient</button>
+            <a class="btn btn-success" href="{% url 'create-patient' %}">Add Patient</a>
+            <!-- <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPatientModal">Add Patient</button> -->
             <input type="text" id="search" class="form-control w-25" placeholder="Search Patients">
         </div>
         
@@ -35,37 +28,29 @@
                 </tr>
             </thead>
             <tbody id="patientTable">
-                <!-- Dynamic patient rows will go here -->
+                {% for patient in patients %}
+                <tr>
+                    <td>{{ patient.id }}</td>
+                    <td>{{ patient.firstname }}</td>
+                    <td>{{ patient.lastname }}</td>
+                    <td>{{ patient.email }}</td> 
+                    <td>{{ patient.date_of_birth }}</td>
+                    <td>{{ patient.doctor }}</td>
+                    <td>{{ patient.medical_file }}</td>
+                    <td>{{ patient.image }}</td>   
+                    <td>
+                        <a href="{% url 'update-patient' patient.id %}" class="btn btn-primary btn-sm">Update</a>
+                        <a href="{% url 'delete-patient' patient.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this patient?');">Delete</a>
+                    </td>
+                    
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center">No patients available</td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
 
-    <!-- Add Patient Modal -->
-    <div class="modal fade" id="addPatientModal" tabindex="-1" aria-labelledby="addPatientModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addPatientModalLabel">Add Patient</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="addPatientForm">
-                        <div class="mb-3">
-                            <label for="patientName" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="patientName" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="patientAge" class="form-label">Age</label>
-                            <input type="number" class="form-control" id="patientAge" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="patientCondition" class="form-label">Condition</label>
-                            <input type="text" class="form-control" id="patientCondition" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Add Patient</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock %}
