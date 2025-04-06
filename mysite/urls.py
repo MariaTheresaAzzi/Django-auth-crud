@@ -18,9 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from user.views import patient_list, login_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', login_view, name='root'),
+    # path('', home, name='home')
     path('user/', include('user.urls')),
     path('user/', include('django.contrib.auth.urls')),
     # path('patient/', include('patient.urls')),

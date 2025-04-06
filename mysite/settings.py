@@ -126,3 +126,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+LOGIN_REDIRECT_URL = '/user'  # Or use 'home' if you want the patient list page
+# Redirect users to login after logout
+LOGOUT_REDIRECT_URL = '/user/login/'

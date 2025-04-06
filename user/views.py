@@ -14,6 +14,11 @@ from django.db.models import Q
 #     # return HttpResponse("Hello, world. You're at the user home page.")
 #     return render(request, 'home.html')
 
+# def home(request):
+#     if request.user.is_authenticated:
+#         return redirect('home')
+#     else:
+#         return redirect('login')
 def home(request):
     query = request.GET.get('q', '')
     patients = Patient.objects.all()
