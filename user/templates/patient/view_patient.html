@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Patient Details</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ patient.firstname }} {{ patient.lastname }}</h5>
+            <p class="card-text"><strong>Email:</strong> {{ patient.email }}</p>
+            <p class="card-text"><strong>Date of Birth:</strong> {{ patient.date_of_birth }}</p>
+            <p class="card-text"><strong>Doctor:</strong> {{ patient.doctor }}</p>
+
+            <!-- ✅ Medical File Download -->
+            {% if patient.medical_file %}
+            <p class="card-text">
+                <strong>Medical File:</strong>
+                <a href="{{ patient.medical_file.url }}" download>Download File</a>
+            </p>
+            {% endif %}
+
+            <!-- ✅ Patient Image -->
+            {% if patient.image %}
+            <p>
+                <strong>Patient Image:</strong><br>
+                <img src="{{ patient.image.url }}" alt="Patient Image" width="200" class="img-thumbnail mt-2">
+            </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <a href="{% url 'home' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+</div>
+{% endblock %}
+

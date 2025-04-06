@@ -9,7 +9,7 @@
         
         <div class="d-flex justify-content-between mb-3">
             <a class="btn btn-success" href="{% url 'create-doctor' %}">Add Doctor</a>
-            <input type="text" id="search" class="form-control w-25" placeholder="Search Patients">
+            <input type="text" id="search" class="form-control w-25" placeholder="Search by doctor name" value="{{ request.GET.q|default:'' }}">
         </div>
         
         <table class="table table-striped">
@@ -38,5 +38,28 @@
                 {% endfor %}
             </tbody>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('search');
+            let timeout = null;
+    
+            if (searchInput) {
+                searchInput.addEventListener('input', function () {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        const query = this.value.trim();
+                        const url = new URL(window.location.href);
+                        if (query) {
+                            url.searchParams.set('q', query);
+                        } else {
+                            url.searchParams.delete('q');
+                        }
+                        window.location.href = url.toString();
+                    }, 500);
+                });
+            }
+        });
+    </script>
 
 {% endblock %}

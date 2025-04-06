@@ -8,7 +8,7 @@ class Doctor(models.Model):
     department = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.firstname  # Show doctor's name in admin panel & queries
+        return f"{self.firstname} {self.lastname}"
 
 
 class Patient(models.Model):
@@ -23,4 +23,4 @@ class Patient(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, related_name="patients")
 
     def __str__(self):
-        return self.firstname  # Show patient's name in admin panel & queries
+        return f"{self.firstname} {self.lastname}"

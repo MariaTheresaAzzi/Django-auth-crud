@@ -6,12 +6,28 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import PatientForm, DoctorForm
 from .models import Patient, Doctor
+from django.db.models import Q
 
 @login_required
 # Create your views here.
+# def home(request):
+#     # return HttpResponse("Hello, world. You're at the user home page.")
+#     return render(request, 'home.html')
+
 def home(request):
-    # return HttpResponse("Hello, world. You're at the user home page.")
-    return render(request, 'home.html')
+    query = request.GET.get('q', '')
+    patients = Patient.objects.all()
+
+    if query:
+        patients = patients.filter(
+            Q(firstname__icontains=query) |
+            Q(lastname__icontains=query) |
+            Q(doctor__firstname__icontains=query) |
+            Q(doctor__lastname__icontains=query)
+        )
+
+    patients = patients.order_by('firstname')
+    return render(request, 'home.html', {'patients': patients})
 
 def register_view(request):
     if request.method == 'POST':
@@ -62,9 +78,25 @@ def create_patient(request):
     return render(request, "patient/create_patient.html", {'form': form})
     # return render(request, 'create_patient.html', {'form': form})
 
+# def patient_list(request):
+#     patients = Patient.objects.all()
+#     return render(request, 'home.html', {'patients': patients})
+
 def patient_list(request):
+    query = request.GET.get('q', '')
     patients = Patient.objects.all()
+
+    if query:
+        patients = patients.filter(
+            Q(firstname__icontains=query) |
+            Q(lastname__icontains=query) |
+            Q(doctor__firstname__icontains=query) |
+            Q(doctor__lastname__icontains=query)
+        )
+
+    patients = patients.order_by('firstname')
     return render(request, 'home.html', {'patients': patients})
+
 
 def update_patient(request, pk):
     patient = Patient.objects.get(id=pk)
@@ -82,9 +114,22 @@ def delete_patient(request, pk):
     patient.delete()
     return redirect('home')
 
+def view_patient(request, pk):
+    patient = Patient.objects.get(id=pk)
+    return render(request, 'patient/view_patient.html', {'patient': patient})
+
 
 def doctor_list(request):
+    query = request.GET.get('q', '')
     doctors = Doctor.objects.all()
+
+    if query:
+        doctors = doctors.filter(
+            Q(firstname__icontains=query) |
+            Q(lastname__icontains=query)
+        )
+
+    doctors = doctors.order_by('firstname')
     return render(request, 'doctor/doctor.html', {'doctors': doctors})
 
 def create_doctor(request):
@@ -92,7 +137,7 @@ def create_doctor(request):
         form = DoctorForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('doctor/doctor.html')
+            return redirect('doctor')
     else:
         form = DoctorForm()
     return render(request, "doctor/create_doctor.html", {'form': form})
